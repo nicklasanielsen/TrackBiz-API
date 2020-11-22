@@ -14,7 +14,7 @@ There is no requirement as to what the end product should be about.
 Interested in more information about the assignment? Click [here](https://drive.google.com/file/d/1KJbXQlUVfwblKARqqhvivvKv12Bh_ECm/view) for more information.
 
 ## Documentation
-All the documentation can be found in the [Documentation](https://github.com/nicklasanielsen/TrackBiz-API/blob/master/Documentation/) folder.
+All the documentation can be found in the [documentation](https://github.com/nicklasanielsen/TrackBiz-API/blob/master/documentation/) folder.
 
 ## Collaborators
 
