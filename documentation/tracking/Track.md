@@ -23,40 +23,38 @@ Used by users to track shipments.
 **Code** : 200
 
 ```json
-{
-    [
-        {
-            "courier": "String",
-            "trackingNumber": "String",
-            "consignor": "String",
-            "consignee": "String",
-            "originCountry": "String",
-            "originHub": "String",
-            "destinationCountry": "String",
-            "destinationHub": "String",
-            "weight": Integer,
-            "length": Integer,
-            "height": Integer,
-            "width": Integer,
-            "currentEvent": {
+[
+    {
+        "courier": "String",
+        "trackingNumber": "String",
+        "consignor": "String",
+        "consignee": "String",
+        "originCountry": "String",
+        "originHub": "String",
+        "destinationCountry": "String",
+        "destinationHub": "String",
+        "weight": "Integer",
+        "length": "Integer",
+        "height": "Integer",
+        "width": "Integer",
+        "currentEvent": {
+            "timeStamp": "yyyy-MM-dd HH:mm:ss Time zone",
+            "status": "String",
+            "description": "String",
+            "country": "String",
+            "hub": "String"
+        },
+        "events": [
+            {
                 "timeStamp": "yyyy-MM-dd HH:mm:ss Time zone",
                 "status": "String",
                 "description": "String",
                 "country": "String",
                 "hub": "String"
-            },
-            "events": [
-                {
-                    "timeStamp": "yyyy-MM-dd HH:mm:ss Time zone",
-                    "status": "String",
-                    "description": "String",
-                    "country": "String",
-                    "hub": "String"
-                }, ...
-            ]
-        }, ...
-	]
-}
+            }
+        ]
+    }
+]
 ```
 
 ## Bad Requests

@@ -15,7 +15,7 @@ Used by registered users to track a shipment.
 ```json
 {
     "courier": "String",
-    "sh"
+    "trackingNumber": "String"
 }
 ```
 

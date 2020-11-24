@@ -15,16 +15,14 @@ Used by Admin users to get a list of requested Couriers.
 **Code** : 200
 
 ```json
-{
-    [
- 		{
-            "id": Integer,
-            "name": "String",
-            "url": "String",
-            "message": "String"
-        }, ...
-	]
-}
+[
+	{
+    	"id": "Integer",
+        "name": "String",
+        "url": "String",
+        "message": "String"
+     }
+]
 ```
 
 ## Bad Requests
