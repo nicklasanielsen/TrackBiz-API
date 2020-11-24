@@ -36,7 +36,7 @@ Used by registered users to get their tracked shipments.
                 "country": "String",
                 "hub": "String"
             },
-            "events", [
+            "events": [
                 {
                     "timeStamp": "yyyy-MM-dd HH:mm:ss Time zone",
                     "status": "String",
