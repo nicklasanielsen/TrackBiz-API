@@ -17,7 +17,7 @@ Open endpoints require no Authentication.
 
 ## Feedback related
 
-* [Request Courier](feedback/Request Courier.md) : `POST /api/feedback/courier/`
+* [Request Courier](feedback/RequestCourier.md) : `POST /api/feedback/courier/`
 
 ## Closed Endpoints
 
@@ -27,13 +27,13 @@ The token must be provided under header-key `x-access-token`.
 
 ### User related
 
-* [Edit](user/Edit User.md) : `PUT /api/user/`
-* [Delete](user/Delete User.md) : `DELETE /api/user/`
-* [Get tracked shipments](user/Get tracked shipments.md) : `GET /api/user/shipments/`
-* [Track shipment](user/Track shipment.md) : `POST /api/user/shipments/`
-* [Untrack shipment](user/Untrack shipment.md) : `DELETE /api/user/shipments/`
+* [Edit](user/EditUser.md) : `PUT /api/user/`
+* [Delete](user/DeleteUser.md) : `DELETE /api/user/`
+* [Get tracked shipments](user/GetTrackedShipments.md) : `GET /api/user/shipments/`
+* [Track shipment](user/TrackShipment.md) : `POST /api/user/shipments/`
+* [Untrack shipment](user/UntrackShipment.md) : `DELETE /api/user/shipments/`
 
 ## Feedback related
 
-* [Get requested Couriers](feedback/Get requested Couriers.md) : `GET /api/feedback/courier/`
-* [Delete requested Courier](feedback/Delete requested Courier.md) : `DELETE /api/feedback/courier/`
+* [Get requested Couriers](feedback/GetRequestedCouriers.md) : `GET /api/feedback/courier/`
+* [Delete requested Courier](feedback/DeleteRequestedCourier.md) : `DELETE /api/feedback/courier/`
