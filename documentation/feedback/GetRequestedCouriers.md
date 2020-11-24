@@ -1,4 +1,4 @@
-# Request Courier
+# Get requested Couriers
 
 Used by Admin users to get a list of requested Couriers.
 
@@ -16,8 +16,8 @@ Used by Admin users to get a list of requested Couriers.
 
 ```json
 [
-	{
-    	"id": "Integer",
+    {
+        "id": "Integer",
         "name": "String",
         "url": "String",
         "message": "String"
