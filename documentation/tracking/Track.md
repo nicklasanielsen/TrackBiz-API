@@ -2,21 +2,13 @@
 
 Used by users to track shipments.
 
-**URL** : `/api/tracking/{tracking number}/`
+**URL** : `/api/tracking/{courier}/{tracking number}/`
 
 **Method** : GET
 
 **Authentication required** : No
 
 **Permissions required** : None
-
-## Request Body
-
-```json
-{
-    "courier": "String"
-}
-```
 
 ## Success Response
 
@@ -58,6 +50,19 @@ Used by users to track shipments.
 ```
 
 ## Bad Requests
+
+**Scenario** : Unsupported Courier
+
+**Code** : 501
+
+```json
+{
+    "code": 501,
+    "message": "String"
+}
+```
+
+___
 
 **Scenario** : No shipments found.
 
@@ -110,3 +115,8 @@ ___
     "message": "String"
 }
 ```
+
+## Notes
+
+* Path parameter for Courier represents the Courier, if a Courier isn't specified the string `any` must be used.
+* Path parameter for tracking number must be specified. A tracking number can include numbers and letters and must be provided as a string.
