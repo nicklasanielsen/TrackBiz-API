@@ -54,7 +54,6 @@ public class HttpUtils {
 
             return new Gson().fromJson(jsonStr, JsonObject.class);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
             throw new FetchException("An error occurred while trying to track your shipment, please let us know about this error.", 500);
         }
     }

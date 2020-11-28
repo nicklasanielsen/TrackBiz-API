@@ -22,4 +22,8 @@ public class DAOTask implements Callable<List<ShipmentDTO>> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    private String getUrl() {
+        return "https://api.coolrunner.dk/v3/shipments/" + TRACKING_NUMBER + "/tracking";
+    }
+
 }

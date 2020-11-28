@@ -34,9 +34,11 @@ public class BringTask implements Callable<List<ShipmentDTO>> {
 
         try {
             JsonObject jsonObject = HttpUtils.fetchData(connection);
-            return convertToShipmentDTO(jsonObject, COURIER_NAME, TRACKING_NUMBER);
+            return convertToShipmentDTO(jsonObject);
         } catch (FetchException e) {
             return null;
+        } finally {
+            connection.disconnect();
         }
     }
 
@@ -44,7 +46,7 @@ public class BringTask implements Callable<List<ShipmentDTO>> {
         return "https://tracking.bring.dk/tracking/api/fetch/" + TRACKING_NUMBER + "?lang=en";
     }
 
-    private List<ShipmentDTO> convertToShipmentDTO(JsonObject jsonObject, String courier, String trackingNumber) {
+    private List<ShipmentDTO> convertToShipmentDTO(JsonObject jsonObject) {
         List<ShipmentDTO> shipmentDTOs = new ArrayList();
         ShipmentDTO shipmentDTO;
 
@@ -56,7 +58,7 @@ public class BringTask implements Callable<List<ShipmentDTO>> {
         for (JsonElement object : shipments) {
             JsonObject shipment = object.getAsJsonObject();
 
-            shipmentDTO = new ShipmentDTO(courier, trackingNumber);
+            shipmentDTO = new ShipmentDTO(COURIER_NAME, TRACKING_NUMBER);
 
             // Consignor & Consignee
             consignor = getStringValue(shipment, "senderName");
@@ -96,7 +98,6 @@ public class BringTask implements Callable<List<ShipmentDTO>> {
 
             // Events
             JsonArray events = shipment.getAsJsonArray("packageSet").get(0).getAsJsonObject().getAsJsonArray("eventSet");
-            List<EventDTO> eventDTOs = new ArrayList();
 
             for (JsonElement shippingEvent : events) {
                 JsonObject eventObject = shippingEvent.getAsJsonObject();
@@ -112,15 +113,7 @@ public class BringTask implements Callable<List<ShipmentDTO>> {
             }
 
             // Current event
-            JsonObject currentEvent = events.get(0).getAsJsonObject();
-
-            status = getStatus(getStringValue(currentEvent, "status"));
-            description = getStringValue(currentEvent, "description");
-            country = getStringValue(currentEvent, "country");
-            city = getStringValue(currentEvent, "city");
-            timeStamp = getDateValue(currentEvent, "dateIso");
-
-            event = new EventDTO(status, description, country, city, timeStamp);
+            event = shipmentDTO.getEvents().get(0);
             shipmentDTO.setCurrentEvent(event);
 
             shipmentDTOs.add(shipmentDTO);
@@ -130,13 +123,17 @@ public class BringTask implements Callable<List<ShipmentDTO>> {
     }
 
     private String getStringValue(JsonObject jsonObject, String requestedElement) {
-        JsonElement jsonElement = jsonObject.get(requestedElement);
+        try {
+            JsonElement jsonElement = jsonObject.get(requestedElement);
 
-        if (jsonElement.isJsonNull() || jsonElement.getAsString().isEmpty()) {
+            if (jsonElement.isJsonNull() || jsonElement.getAsString().isEmpty()) {
+                return "Unknown";
+            }
+
+            return jsonElement.getAsString();
+        } catch (Exception e) {
             return "Unknown";
         }
-
-        return jsonElement.getAsString();
     }
 
     private Date getDateValue(JsonObject jsonObject, String requestedElement) {
