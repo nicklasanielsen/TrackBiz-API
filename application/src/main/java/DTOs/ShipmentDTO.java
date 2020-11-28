@@ -2,6 +2,7 @@ package DTOs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -106,6 +107,75 @@ public class ShipmentDTO {
 
     public List<EventDTO> getEvents() {
         return events;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.courier);
+        hash = 47 * hash + Objects.hashCode(this.trackingNumber);
+        hash = 47 * hash + Objects.hashCode(this.consignor);
+        hash = 47 * hash + Objects.hashCode(this.consignee);
+        hash = 47 * hash + Objects.hashCode(this.originCountry);
+        hash = 47 * hash + Objects.hashCode(this.originCity);
+        hash = 47 * hash + Objects.hashCode(this.destinationCountry);
+        hash = 47 * hash + Objects.hashCode(this.destinationCity);
+        hash = 47 * hash + Objects.hashCode(this.volume);
+        hash = 47 * hash + Objects.hashCode(this.weight);
+        hash = 47 * hash + Objects.hashCode(this.currentEvent);
+        hash = 47 * hash + Objects.hashCode(this.events);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ShipmentDTO other = (ShipmentDTO) obj;
+        if (!Objects.equals(this.courier, other.courier)) {
+            return false;
+        }
+        if (!Objects.equals(this.trackingNumber, other.trackingNumber)) {
+            return false;
+        }
+        if (!Objects.equals(this.consignor, other.consignor)) {
+            return false;
+        }
+        if (!Objects.equals(this.consignee, other.consignee)) {
+            return false;
+        }
+        if (!Objects.equals(this.originCountry, other.originCountry)) {
+            return false;
+        }
+        if (!Objects.equals(this.originCity, other.originCity)) {
+            return false;
+        }
+        if (!Objects.equals(this.destinationCountry, other.destinationCountry)) {
+            return false;
+        }
+        if (!Objects.equals(this.destinationCity, other.destinationCity)) {
+            return false;
+        }
+        if (!Objects.equals(this.volume, other.volume)) {
+            return false;
+        }
+        if (!Objects.equals(this.weight, other.weight)) {
+            return false;
+        }
+        if (!Objects.equals(this.currentEvent, other.currentEvent)) {
+            return false;
+        }
+        if (!Objects.equals(this.events, other.events)) {
+            return false;
+        }
+        return true;
     }
 
 }
