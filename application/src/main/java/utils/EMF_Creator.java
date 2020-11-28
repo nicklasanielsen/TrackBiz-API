@@ -32,7 +32,7 @@ public class EMF_Creator {
         if (isDeployed) {
             String user = System.getenv("USER");
             String pw = System.getenv("PW");
-            String connection_str = System.getenv("CONNECTION_STR_CA3");
+            String connection_str = System.getenv("CONNECTION_STR_TrackBiz");
 
             Properties props = new Properties();
             props.setProperty("javax.persistence.jdbc.user", user);

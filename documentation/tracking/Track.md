@@ -22,19 +22,17 @@ Used by users to track shipments.
         "consignor": "String",
         "consignee": "String",
         "originCountry": "String",
-        "originHub": "String",
+        "originCity": "String",
         "destinationCountry": "String",
-        "destinationHub": "String",
-        "weight": "Integer",
-        "length": "Integer",
-        "height": "Integer",
-        "width": "Integer",
+        "destinationCity": "String",
+        "volume": "String",
+        "weight": "String",
         "currentEvent": {
             "timeStamp": "yyyy-MM-dd HH:mm:ss Time zone",
             "status": "String",
             "description": "String",
             "country": "String",
-            "hub": "String"
+            "city": "String"
         },
         "events": [
             {
@@ -42,7 +40,7 @@ Used by users to track shipments.
                 "status": "String",
                 "description": "String",
                 "country": "String",
-                "hub": "String"
+                "city": "String"
             }
         ]
     }
@@ -50,6 +48,19 @@ Used by users to track shipments.
 ```
 
 ## Bad Requests
+
+**Scenario** : No shipment found
+
+**Code** : 400
+
+```json
+{
+    "code": 400,
+    "message": "String"
+}
+```
+
+
 
 **Scenario** : Unsupported Courier
 

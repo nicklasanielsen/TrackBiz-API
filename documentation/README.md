@@ -13,7 +13,7 @@ Open endpoints require no Authentication.
 
 ### Tracking related
 
-* [Track](tracking/Track.md) : `GET /api/tracking/{tracking number}/`
+* [Track](tracking/Track.md) : `GET /api/tracking/{courier}/{tracking number}/`
 
 ## Feedback related
 

@@ -24,13 +24,11 @@ public class ApplicationConfig extends Application {
         resources.add(errorhandling.mappers.AuthenticationExceptionMapper.class);
         resources.add(errorhandling.mappers.FetchExceptionMapper.class);
         resources.add(errorhandling.mappers.GenericExceptionMapper.class);
+        resources.add(errorhandling.mappers.NoShipmentsfoundExceptionMapper.class);
         resources.add(errorhandling.mappers.NotAuthorizedExceptionMapper.class);
-        resources.add(errorhandling.mappers.UserCreationExceptionMapper.class);
-        resources.add(errorhandling.mappers.UserNotFoundExceptionMapper.class);
+        resources.add(errorhandling.mappers.UnsupportedCourierExpcetionMapper.class);
         resources.add(org.glassfish.jersey.server.wadl.internal.WadlResource.class);
-        resources.add(rest.AuthenticationResource.class);
-        resources.add(rest.JokeResource.class);
-        resources.add(rest.UserResource.class);
+        resources.add(rest.TrackingResource.class);
         resources.add(security.JWTAuthenticationFilter.class);
         resources.add(security.RolesAllowedFilter.class);
     }
