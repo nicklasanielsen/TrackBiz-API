@@ -15,9 +15,13 @@ Open endpoints require no Authentication.
 
 * [Track](tracking/Track.md) : `GET /api/tracking/{courier}/{tracking number}/`
 
-## Feedback related
+### Feedback related
 
 * [Request Courier](feedback/RequestCourier.md) : `POST /api/feedback/courier/`
+
+### Courier related
+
+* [Get supported Couriers](courier/GetAllCouriers.md) : `GET /api/courier/all/`
 
 ## Closed Endpoints
 
@@ -33,7 +37,7 @@ The token must be provided under header-key `x-access-token`.
 * [Track shipment](user/TrackShipment.md) : `POST /api/user/shipments/`
 * [Untrack shipment](user/UntrackShipment.md) : `DELETE /api/user/shipments/`
 
-## Feedback related
+### Feedback related
 
 * [Get requested Couriers](feedback/GetRequestedCouriers.md) : `GET /api/feedback/courier/`
 * [Delete requested Courier](feedback/DeleteRequestedCourier.md) : `DELETE /api/feedback/courier/`
