@@ -37,7 +37,7 @@ public class PostNordTask implements Callable<List<ShipmentDTO>> {
             JsonObject jsonObject = HttpUtils.fetchData(connection);
             return convertToShipmentDTO(jsonObject);
         } catch (FetchException e) {
-            return null;
+            return new ArrayList<>();
         } finally {
             connection.disconnect();
         }
@@ -54,80 +54,82 @@ public class PostNordTask implements Callable<List<ShipmentDTO>> {
         String consignor, consignee, originCountry, originCity,
                 destinationCountry, destinationCity, volume, weight;
 
-        JsonArray shipments = jsonObject.get("TrackingInformationResponse").getAsJsonObject().getAsJsonArray("shipments");
+        try {
+            JsonArray shipments = jsonObject.get("TrackingInformationResponse").getAsJsonObject().getAsJsonArray("shipments");
 
-        for (JsonElement object : shipments) {
-            JsonObject shipment = object.getAsJsonObject();
+            for (JsonElement object : shipments) {
+                JsonObject shipment = object.getAsJsonObject();
 
-            shipmentDTO = new ShipmentDTO(COURIER_NAME, TRACKING_NUMBER);
+                shipmentDTO = new ShipmentDTO(COURIER_NAME, TRACKING_NUMBER);
 
-            // Consignor & Consignee
-            JsonObject consignorObject = shipment.getAsJsonObject("consignor");
+                // Consignor & Consignee
+                JsonObject consignorObject = shipment.getAsJsonObject("consignor");
 
-            consignor = getStringValue(consignorObject, "name");
-            consignee = "Unknown"; // Value not available due to privacy
+                consignor = getStringValue(consignorObject, "name");
+                consignee = "Unknown"; // Value not available due to privacy
 
-            shipmentDTO.setConsignor(consignor);
-            shipmentDTO.setConsignee(consignee);
+                shipmentDTO.setConsignor(consignor);
+                shipmentDTO.setConsignee(consignee);
 
-            // Origin
-            JsonObject originObject = consignorObject.getAsJsonObject("address");
+                // Origin
+                JsonObject originObject = consignorObject.getAsJsonObject("address");
 
-            originCountry = getStringValue(originObject, "country");
-            originCity = "Unknown"; // Value not available due to privacy
+                originCountry = getStringValue(originObject, "country");
+                originCity = "Unknown"; // Value not available due to privacy
 
-            shipmentDTO.setOriginCountry(originCountry);
-            shipmentDTO.setOriginCity(originCity);
+                shipmentDTO.setOriginCountry(originCountry);
+                shipmentDTO.setOriginCity(originCity);
 
-            // Destination
-            JsonObject destinationObject = shipment.getAsJsonObject("consignee").getAsJsonObject("address");
+                // Destination
+                JsonObject destinationObject = shipment.getAsJsonObject("consignee").getAsJsonObject("address");
 
-            destinationCountry = getStringValue(destinationObject, "country");
-            destinationCity = getStringValue(destinationObject, "city");
+                destinationCountry = getStringValue(destinationObject, "country");
+                destinationCity = getStringValue(destinationObject, "city");
 
-            shipmentDTO.setDestinationCountry(destinationCountry);
-            shipmentDTO.setDestinationCity(destinationCity);
+                shipmentDTO.setDestinationCountry(destinationCountry);
+                shipmentDTO.setDestinationCity(destinationCity);
 
-            // Dimensions
-            JsonObject volumeObject = shipment.getAsJsonObject("totalVolume");
-            JsonObject weightObject = shipment.getAsJsonObject("totalWeight");
+                // Dimensions
+                JsonObject volumeObject = shipment.getAsJsonObject("totalVolume");
+                JsonObject weightObject = shipment.getAsJsonObject("totalWeight");
 
-            volume = getStringValue(volumeObject, "value");
-            weight = getStringValue(weightObject, "value");
+                volume = getStringValue(volumeObject, "value");
+                weight = getStringValue(weightObject, "value");
 
-            shipmentDTO.setVolume(volume);
-            shipmentDTO.setWeight(weight);
+                shipmentDTO.setVolume(volume);
+                shipmentDTO.setWeight(weight);
 
-            String status, description, country, city;
-            Date timeStamp;
-            EventDTO event;
+                String status, description, country, city;
+                Date timeStamp;
+                EventDTO event;
 
-            // Events
-            JsonArray events = shipment.getAsJsonArray("items").get(0).getAsJsonObject().getAsJsonArray("events");
+                // Events
+                JsonArray events = shipment.getAsJsonArray("items").get(0).getAsJsonObject().getAsJsonArray("events");
 
-            for (JsonElement shippingEvent : events) {
-                JsonObject eventObject = shippingEvent.getAsJsonObject();
-                JsonObject locationObject = eventObject.getAsJsonObject("location");
+                for (JsonElement shippingEvent : events) {
+                    JsonObject eventObject = shippingEvent.getAsJsonObject();
+                    JsonObject locationObject = eventObject.getAsJsonObject("location");
 
-                status = getStatus(getStringValue(eventObject, "status"));
-                description = getStringValue(eventObject, "eventDescription");
-                country = getStringValue(locationObject, "country");
-                city = getStringValue(locationObject, "city");
-                timeStamp = getDateValue(eventObject, "eventTime");
+                    status = getStatus(getStringValue(eventObject, "status"));
+                    description = getStringValue(eventObject, "eventDescription");
+                    country = getStringValue(locationObject, "country");
+                    city = getStringValue(locationObject, "city");
+                    timeStamp = getDateValue(eventObject, "eventTime");
 
-                event = new EventDTO(status, description, country, city, timeStamp);
-                shipmentDTO.addEvent(event);
+                    event = new EventDTO(status, description, country, city, timeStamp);
+                    shipmentDTO.addEvent(event);
+                }
+
+                // Current event
+                Collections.reverse(shipmentDTO.getEvents()); // Normally listed oldest to newest
+
+                event = shipmentDTO.getEvents().get(0);
+                shipmentDTO.setCurrentEvent(event);
+
+                shipmentDTOs.add(shipmentDTO);
             }
-
-            // Current event
-            Collections.reverse(shipmentDTO.getEvents()); // Normally listed oldest to newest
-
-            event = shipmentDTO.getEvents().get(0);
-            shipmentDTO.setCurrentEvent(event);
-
-            shipmentDTOs.add(shipmentDTO);
+        } catch (Exception e) {
         }
-
         return shipmentDTOs;
     }
 

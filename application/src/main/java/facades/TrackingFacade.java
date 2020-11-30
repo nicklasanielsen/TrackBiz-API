@@ -75,11 +75,7 @@ public class TrackingFacade {
         // Getting results, timeout set to 10 sec
         try {
             for (Future<List<ShipmentDTO>> future : futures) {
-                try {
-                    shipmentDTOs.addAll(future.get(10, TimeUnit.SECONDS));
-                } catch (NullPointerException e) {
-
-                }
+                shipmentDTOs.addAll(future.get(10, TimeUnit.SECONDS));
             }
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             if (e instanceof TimeoutException) {
