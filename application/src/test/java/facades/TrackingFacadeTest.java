@@ -118,7 +118,7 @@ public class TrackingFacadeTest {
         // Assert
         assertThrows(NoShipmentsFoundException.class, () -> {
             // Act
-            facade.trackShipments(threadPool, "any", trackingNumber);
+            facade.trackShipments(threadPool, "Any", trackingNumber);
         });
     }
 
