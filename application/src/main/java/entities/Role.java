@@ -66,10 +66,6 @@ public class Role implements Serializable {
         return userList;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
-    }
-
     public void addUser(User user) {
         if (!userList.contains(user)) {
             userList.add(user);

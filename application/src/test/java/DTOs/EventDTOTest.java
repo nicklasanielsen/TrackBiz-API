@@ -2,7 +2,6 @@ package DTOs;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,11 +20,6 @@ public class EventDTOTest {
     @BeforeAll
     public static void setUpClass() {
         timeStamp = new Date();
-    }
-
-    @AfterAll
-    public static void tearDownClass() {
-
     }
 
     @BeforeEach
