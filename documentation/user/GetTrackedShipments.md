@@ -18,22 +18,21 @@ Used by registered users to get their tracked shipments.
 [
     {
         "courier": "String",
+        "trackingNumber": "String",
         "consignor": "String",
         "consignee": "String",
         "originCountry": "String",
-        "originHub": "String",
+        "originCity": "String",
         "destinationCountry": "String",
-        "destinationHub": "String",
-        "weight": "Integer",
-        "length": "Integer",
-        "height": "Integer",
-        "width": "Integer",
+        "destinationCity": "String",
+        "volume": "String",
+        "weight": "String",
         "currentEvent": {
             "timeStamp": "yyyy-MM-dd HH:mm:ss Time zone",
             "status": "String",
             "description": "String",
             "country": "String",
-            "hub": "String"
+            "city": "String"
         },
         "events": [
             {
@@ -41,7 +40,7 @@ Used by registered users to get their tracked shipments.
                 "status": "String",
                 "description": "String",
                 "country": "String",
-                "hub": "String"
+                "city": "String"
             }
         ]
     }

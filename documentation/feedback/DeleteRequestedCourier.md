@@ -10,6 +10,14 @@ Used by Admin users to delete a courier request from the list of requested Couri
 
 **Permissions required** : Admin
 
+## Request Body
+
+```json
+{
+    "id": "String"
+}
+```
+
 ## Success Response
 
 **Code** : 200
@@ -22,6 +30,45 @@ Used by Admin users to delete a courier request from the list of requested Couri
 ```
 
 ## Bad Requests
+
+**Scenario** : Missing request body.
+
+**Code** : 400
+
+```
+{
+    "code": 400,
+    "message": "String"
+}
+```
+
+------
+
+**Scenario** : Invalid request body.
+
+**Code** : 400
+
+```
+{
+    "code": 400,
+    "message": "String"
+}
+```
+
+___
+
+**Scenario** : Request not found - invalid ID
+
+**Code** : 400
+
+```json
+{
+    "code": 400,
+    "message": "String"
+}
+```
+
+___
 
 **Scenario** : Missing authentication.
 
