@@ -51,7 +51,7 @@ public class UserResource {
     @Path("shipments")
     @RolesAllowed("User")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTrackedShipments() throws FetchException {
+    public Response getTrackedShipments() throws FetchException, NoShipmentsFoundException {
         User user = getUser();
         List<ShipmentDTO> shipmentDTOs = FACADE.getTrackedShipmentsByUser(user, THREAD_POOL);
 
