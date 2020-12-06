@@ -1,14 +1,26 @@
 package facades;
 
+import DTOs.ShipmentDTO;
 import DTOs.UserDTO;
+import entities.Courier;
 import entities.Role;
+import entities.Shipment;
 import entities.User;
 import errorhandling.exceptions.AuthenticationException;
 import errorhandling.exceptions.DatabaseException;
+import errorhandling.exceptions.FetchException;
+import errorhandling.exceptions.NoShipmentsFoundException;
+import errorhandling.exceptions.UnsupportedCourierException;
 import errorhandling.exceptions.UserCreationException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
 
 /**
  *
@@ -91,6 +103,111 @@ public class UserFacade {
             }
 
             return new UserDTO(user);
+        } finally {
+            em.close();
+        }
+    }
+
+    public User getUserByUserName(String userName) {
+        EntityManager em = getEntityManager();
+
+        try {
+            User user = em.find(User.class, userName);
+
+            if (user == null) {
+                throw new UnsupportedOperationException();
+            }
+
+            return user;
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<ShipmentDTO> getTrackedShipmentsByUser(User user, ExecutorService treadPool) throws FetchException {
+        EntityManager em = getEntityManager();
+
+        TrackingFacade trackingFacade = TrackingFacade.getTrackingFacade(emf);
+        List<ShipmentDTO> shipmentDTOs = new ArrayList();
+
+        try {
+            Query query = em.createNamedQuery("User.getAllShipments");
+            query.setParameter("user", user);
+            List<Shipment> shipments = query.getResultList();
+
+            if (shipments.isEmpty()) {
+                throw new UnsupportedOperationException();
+            }
+
+            String courier, trackingNumber;
+            for (Shipment shipment : shipments) {
+                courier = shipment.getCourier().getName();
+                trackingNumber = shipment.getTrackingNumber();
+
+                shipmentDTOs.addAll(trackingFacade.trackShipments(treadPool, courier, trackingNumber));
+            }
+
+            return shipmentDTOs;
+        } catch (NoShipmentsFoundException | UnsupportedCourierException ex) {
+            throw new UnsupportedOperationException();
+        } finally {
+            em.close();
+        }
+    }
+
+    public void addTrackedShipment(User user, Courier courier, String trackingNumber) {
+        EntityManager em = getEntityManager();
+
+        Shipment shipment = getShipment(courier, trackingNumber);
+        user.addShipment(shipment);
+
+        try {
+            em.getTransaction().begin();
+            em.merge(user);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    public void removeTrackedShipment(User user, Courier courier, String trackingNumber) throws NoShipmentsFoundException {
+        EntityManager em = getEntityManager();
+
+        Shipment shipment = getShipment(courier, trackingNumber);
+
+        if (!shipment.getUsers().contains(user)) {
+            throw new NoShipmentsFoundException(trackingNumber);
+        }
+
+        shipment.removeUser(user);
+
+        try {
+            em.getTransaction().begin();
+            em.merge(shipment);
+            em.getTransaction().commit();
+
+            if (shipment.getUsers().isEmpty()) {
+                em.getTransaction().begin();
+                shipment = em.find(Shipment.class, shipment.getId());
+                em.remove(shipment);
+                em.getTransaction().commit();
+            }
+        } finally {
+            em.close();
+        }
+    }
+
+    private Shipment getShipment(Courier courier, String trackingNumber) {
+        EntityManager em = getEntityManager();
+
+        try {
+            Query query = em.createNamedQuery("Shipment.getShipment");
+            query.setParameter("trackingNumber", trackingNumber);
+            query.setParameter("courierName", courier.getName());
+
+            return (Shipment) query.getSingleResult();
+        } catch (NoResultException e) {
+            return new Shipment(courier, trackingNumber);
         } finally {
             em.close();
         }

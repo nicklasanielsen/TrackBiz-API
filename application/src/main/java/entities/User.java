@@ -29,7 +29,8 @@ import org.mindrot.jbcrypt.BCrypt;
 @Table(name = "USERS")
 @NamedQueries({
     @NamedQuery(name = "User.getAll", query = "SELECT u FROM User u"),
-    @NamedQuery(name = "User.deleteAllRows", query = "DELETE FROM User")})
+    @NamedQuery(name = "User.deleteAllRows", query = "DELETE FROM User"),
+    @NamedQuery(name = "User.getAllShipments", query = "SELECT s FROM Shipment s JOIN FETCH s.users u WHERE u = :user")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -69,11 +70,19 @@ public class User implements Serializable {
         @JoinColumn(name = "ROLE", referencedColumnName = "ROLE_NAME")})
     private List<Role> roles;
 
+    @ManyToMany
+    @JoinTable(name = "LK_USERS_SHIPMENTS", joinColumns = {
+        @JoinColumn(name = "USER", referencedColumnName = "USERNAME")}, inverseJoinColumns = {
+        @JoinColumn(name = "SHIPMENT", referencedColumnName = "ID")
+    })
+    private List<Shipment> shipments;
+
     public User(String username, String firstname, String lastname, String password, List<Role> roles) {
         this.userName = username;
         this.firstName = firstname;
         this.lastName = lastname;
         this.roles = new ArrayList<>();
+        shipments = new ArrayList();
         this.password = getHashWithSalt(password);
         created = new Date();
 
@@ -84,6 +93,7 @@ public class User implements Serializable {
 
     public User() {
         this.roles = new ArrayList<>();
+        shipments = new ArrayList();
     }
 
     public String getUserName() {
@@ -144,15 +154,34 @@ public class User implements Serializable {
         }
     }
 
+    public List<Shipment> getShipments() {
+        return shipments;
+    }
+
+    public void addShipment(Shipment shipment) {
+        if (!shipments.contains(shipment)) {
+            shipments.add(shipment);
+            shipment.getUsers().add(this);
+        }
+    }
+
+    public void removeShipment(Shipment shipment) {
+        if (shipments.contains(shipment)) {
+            shipments.remove(shipment);
+            shipment.getUsers().remove(this);
+        }
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 89 * hash + Objects.hashCode(this.userName);
-        hash = 89 * hash + Objects.hashCode(this.firstName);
-        hash = 89 * hash + Objects.hashCode(this.lastName);
-        hash = 89 * hash + Objects.hashCode(this.created);
-        hash = 89 * hash + Objects.hashCode(this.password);
-        hash = 89 * hash + Objects.hashCode(this.roles);
+        hash = 41 * hash + Objects.hashCode(this.userName);
+        hash = 41 * hash + Objects.hashCode(this.firstName);
+        hash = 41 * hash + Objects.hashCode(this.lastName);
+        hash = 41 * hash + Objects.hashCode(this.created);
+        hash = 41 * hash + Objects.hashCode(this.password);
+        hash = 41 * hash + Objects.hashCode(this.roles);
+        hash = 41 * hash + Objects.hashCode(this.shipments);
         return hash;
     }
 
@@ -184,6 +213,9 @@ public class User implements Serializable {
             return false;
         }
         if (!Objects.equals(this.roles, other.roles)) {
+            return false;
+        }
+        if (!Objects.equals(this.shipments, other.shipments)) {
             return false;
         }
         return true;
