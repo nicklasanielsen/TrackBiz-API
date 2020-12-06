@@ -124,11 +124,13 @@ public class UserFacade {
         }
     }
 
-    public List<ShipmentDTO> getTrackedShipmentsByUser(User user, ExecutorService treadPool) throws FetchException {
+    public List<ShipmentDTO> getTrackedShipmentsByUser(User user, ExecutorService treadPool) throws FetchException, NoShipmentsFoundException {
         EntityManager em = getEntityManager();
 
         TrackingFacade trackingFacade = TrackingFacade.getTrackingFacade(emf);
         List<ShipmentDTO> shipmentDTOs = new ArrayList();
+
+        String courier, trackingNumber = "";
 
         try {
             Query query = em.createNamedQuery("User.getAllShipments");
@@ -136,10 +138,9 @@ public class UserFacade {
             List<Shipment> shipments = query.getResultList();
 
             if (shipments.isEmpty()) {
-                throw new UnsupportedOperationException();
+                throw new NoShipmentsFoundException("your account");
             }
 
-            String courier, trackingNumber;
             for (Shipment shipment : shipments) {
                 courier = shipment.getCourier().getName();
                 trackingNumber = shipment.getTrackingNumber();
@@ -149,7 +150,7 @@ public class UserFacade {
 
             return shipmentDTOs;
         } catch (NoShipmentsFoundException | UnsupportedCourierException ex) {
-            throw new UnsupportedOperationException();
+            throw new NoShipmentsFoundException("your account");
         } finally {
             em.close();
         }
