@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
 import io.restassured.parsing.Parser;
 import org.glassfish.grizzly.http.util.HttpStatus;
-import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.is;
 
 /**

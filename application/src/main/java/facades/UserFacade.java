@@ -15,8 +15,6 @@ import errorhandling.exceptions.UserCreationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
@@ -114,10 +112,6 @@ public class UserFacade {
         try {
             User user = em.find(User.class, userName);
 
-            if (user == null) {
-                throw new UnsupportedOperationException();
-            }
-
             return user;
         } finally {
             em.close();
@@ -145,12 +139,14 @@ public class UserFacade {
                 courier = shipment.getCourier().getName();
                 trackingNumber = shipment.getTrackingNumber();
 
-                shipmentDTOs.addAll(trackingFacade.trackShipments(treadPool, courier, trackingNumber));
+                try {
+                    shipmentDTOs.addAll(trackingFacade.trackShipments(treadPool, courier, trackingNumber));
+                } catch (NoShipmentsFoundException | UnsupportedCourierException e) {
+                    removeTrackedShipment(user, shipment.getCourier(), trackingNumber);
+                }
             }
 
             return shipmentDTOs;
-        } catch (NoShipmentsFoundException | UnsupportedCourierException ex) {
-            throw new NoShipmentsFoundException("your account");
         } finally {
             em.close();
         }

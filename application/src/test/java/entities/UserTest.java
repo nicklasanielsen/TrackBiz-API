@@ -214,4 +214,113 @@ public class UserTest {
         assertTrue(actualRoles.isEmpty());
     }
 
+    @Test
+    public void getShipments_Success_Empty() {
+        // Act
+        List<Shipment> actual = user.getShipments();
+
+        // Assert
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    public void getShipments_Success_One_Shipment() {
+        // Arrange
+        Shipment shipment = new Shipment(new Courier("tester"), "123");
+
+        // Act
+        user.addShipment(shipment);
+        List<Shipment> actual = user.getShipments();
+
+        // Assert
+        assertTrue(actual.size() == 1);
+        assertTrue(actual.contains(shipment));
+    }
+
+    @Test
+    public void getShipments_Success_Multiple_Shipments() {
+        // Arrange
+        List<Shipment> expected = new ArrayList();
+        expected.add(new Shipment(new Courier("tester"), "123"));
+        expected.add(new Shipment(new Courier("tester2"), "1234"));
+
+        // Act
+        user.setShipments(expected);
+        List<Shipment> actual = user.getShipments();
+
+        // Assert
+        assertTrue(expected.containsAll(actual));
+    }
+
+    @Test
+    public void setShipments_Success() {
+        // Arrange
+        List<Shipment> expected = new ArrayList();
+        expected.add(new Shipment(new Courier("tester"), "123"));
+        expected.add(new Shipment(new Courier("tester2"), "1234"));
+
+        // Act
+        user.setShipments(expected);
+        List<Shipment> actual = user.getShipments();
+
+        // Assert
+        assertTrue(expected.containsAll(actual));
+    }
+
+    @Test
+    public void addShipment_Success() {
+        // Arrange
+        Shipment shipment = new Shipment(new Courier("tester"), "123");
+
+        // Act
+        user.addShipment(shipment);
+        List<Shipment> actual = user.getShipments();
+
+        // Assert
+        assertTrue(actual.size() == 1);
+        assertTrue(actual.contains(shipment));
+    }
+
+    @Test
+    public void addShipment_Success_Already_Added() {
+        // Arrange
+        Shipment shipment = new Shipment(new Courier("tester"), "123");
+
+        // Act
+        user.addShipment(shipment);
+        user.addShipment(shipment);
+        List<Shipment> actual = user.getShipments();
+
+        // Assert
+        assertTrue(actual.size() == 1);
+        assertTrue(actual.contains(shipment));
+    }
+
+    @Test
+    public void removeShipment_Success() {
+        // Arrange
+        Shipment shipment = new Shipment(new Courier("tester"), "123");
+
+        // Act
+        user.addShipment(shipment);
+        user.removeShipment(shipment);
+        List<Shipment> actual = user.getShipments();
+
+        // Assert
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    public void removeShipment_Success_Not_Added() {
+        // Arrange
+        Shipment shipment = new Shipment(new Courier("tester"), "123");
+
+        // Act
+        user.removeShipment(shipment);
+        List<Shipment> actual = user.getShipments();
+
+        // Assert
+        assertTrue(actual.isEmpty());
+    }
+
 }

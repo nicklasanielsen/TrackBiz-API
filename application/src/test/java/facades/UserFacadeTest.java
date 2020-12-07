@@ -1,7 +1,9 @@
 package facades;
 
 import DTOs.UserDTO;
+import entities.Courier;
 import entities.Role;
+import entities.Shipment;
 import entities.User;
 import errorhandling.exceptions.DatabaseException;
 import errorhandling.exceptions.UserCreationException;
@@ -35,6 +37,17 @@ public class UserFacadeTest {
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         facade = UserFacade.getUserFacade(emf);
         roleFacade = RoleFacade.getRoleFacade(emf);
+
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+            em.persist(new Role("User"));
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+
         roles = roleFacade.getDefaultRoles();
     }
 
@@ -45,6 +58,7 @@ public class UserFacadeTest {
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Role.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Courier.deleteAll").executeUpdate();
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -132,6 +146,18 @@ public class UserFacadeTest {
         assertThrows(AuthenticationException.class, () -> {
             facade.login(user.getUserName(), "INCORRECT_PASSWORD");
         });
+    }
+
+    @Test
+    public void getUserByUserName_Success() {
+        // Arrange
+        User expected = user;
+
+        // Act
+        User actual = facade.getUserByUserName(expected.getUserName());
+
+        // Assert
+        assertEquals(expected, actual);
     }
 
 }
