@@ -1,6 +1,7 @@
 package rest;
 
 import DTOs.ShipmentDTO;
+import DTOs.UserDTO;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import entities.Courier;
@@ -47,6 +48,37 @@ public class UserResource {
 
     @Context
     SecurityContext securityContext;
+
+    @GET
+    @RolesAllowed("User")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserAccount() {
+        String username = securityContext.getUserPrincipal().getName();
+        UserDTO userDTO = FACADE.getUserAccount(username);
+
+        return Response.ok(userDTO).build();
+    }
+
+    @PUT
+    @RolesAllowed("User")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response editUserAccount() {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    }
+
+    @DELETE
+    @RolesAllowed("User")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteUserAccount() {
+        String username = securityContext.getUserPrincipal().getName();
+        FACADE.deleteUserAccount(username);
+
+        return Response.ok("{\n"
+                + "\"code\": 200,\n"
+                + "\"message\": \"User deleted\"\n"
+                + "}").build();
+    }
 
     @GET
     @Path("shipments")
@@ -114,29 +146,6 @@ public class UserResource {
         } catch (Exception e) {
             throw new API_Exception("Malformed JSON Suplied", 400, e);
         }
-    }
-
-    @GET
-    @RolesAllowed("User")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserAccount() {
-        String username = securityContext.getUserPrincipal().getName();
-        return Response.ok(FACADE.getUserAccount(username)).build();
-    }
-
-    @PUT
-    @RolesAllowed("User")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response editUserAccount() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
-    }
-
-    @DELETE
-    @RolesAllowed("User")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUserAccount() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
 }

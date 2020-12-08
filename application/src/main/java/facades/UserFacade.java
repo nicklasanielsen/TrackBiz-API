@@ -211,7 +211,8 @@ public class UserFacade {
     }
 
     public UserDTO getUserAccount(String userName) {
-        return new UserDTO(getUserByUserName(userName));
+        User user = getUserByUserName(userName);
+        return new UserDTO(user);
     }
 
     public UserDTO editUserAccount(String oldUserName, String newUserName, String firstName, String lastName, String password) {
@@ -219,7 +220,21 @@ public class UserFacade {
     }
 
     public boolean deleteUserAccount(String userName) {
-        throw new UnsupportedOperationException();
+        EntityManager em = getEntityManager();
+
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userName);
+            em.remove(user);
+            em.getTransaction().commit();
+
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        } finally {
+            em.close();
+        }
     }
 
 }
