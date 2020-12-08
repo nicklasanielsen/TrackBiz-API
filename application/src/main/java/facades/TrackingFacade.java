@@ -39,7 +39,7 @@ public class TrackingFacade {
     }
 
     public List<ShipmentDTO> trackShipments(ExecutorService threadPool, String courier, String trackingNumber) throws UnsupportedCourierException, FetchException, NoShipmentsFoundException {
-        boolean anyCourier = courier.equals("Any");
+        boolean anyCourier = courier.equalsIgnoreCase("any");
 
         if (!anyCourier && !courierFacade.isSupported(courier)) {
             throw new UnsupportedCourierException(courier);

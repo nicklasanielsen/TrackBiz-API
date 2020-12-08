@@ -61,7 +61,8 @@ public class UserFacade {
 
         try {
             // Checking if username is in use
-            if (em.find(User.class, username) != null) {
+            if (userNameIsUsed(username)) {
+                System.out.println("USERNAME USED!");
                 throw new UserCreationException("Username already in use.");
             }
 
@@ -84,38 +85,20 @@ public class UserFacade {
                 em.getTransaction().rollback();
             }
 
-            throw new DatabaseException("Something went wrong! Failed to create user, please try again later.");
+            throw new DatabaseException(e.getMessage());//"Something went wrong! Failed to create user, please try again later.");
         } finally {
             em.close();
         }
     }
 
     public UserDTO login(String userName, String password) throws AuthenticationException {
-        EntityManager em = getEntityManager();
+        User user = getUserByUserName(userName);
 
-        try {
-            User user = em.find(User.class, userName);
-
-            if (user == null || !user.verifyPassword(password)) {
-                throw new AuthenticationException("Invalid username and/or password.");
-            }
-
-            return new UserDTO(user);
-        } finally {
-            em.close();
+        if (user == null || !user.verifyPassword(password)) {
+            throw new AuthenticationException("Invalid username and/or password.");
         }
-    }
 
-    public User getUserByUserName(String userName) {
-        EntityManager em = getEntityManager();
-
-        try {
-            User user = em.find(User.class, userName);
-
-            return user;
-        } finally {
-            em.close();
-        }
+        return new UserDTO(user);
     }
 
     public List<ShipmentDTO> getTrackedShipmentsByUser(User user, ExecutorService treadPool) throws FetchException, NoShipmentsFoundException {
@@ -215,8 +198,40 @@ public class UserFacade {
         return new UserDTO(user);
     }
 
-    public UserDTO editUserAccount(String oldUserName, String newUserName, String firstName, String lastName, String password) {
-        throw new UnsupportedOperationException();
+    public UserDTO editUserAccount(String oldUserName, String newUserName, String firstName, String lastName, String password) throws UserCreationException {
+        EntityManager em = getEntityManager();
+
+        try {
+            em.getTransaction().begin();
+
+            User user = getUserByUserName(oldUserName);
+
+            if (!newUserName.isEmpty() && !oldUserName.equals(newUserName) && userNameIsUsed(newUserName)) {
+                throw new UserCreationException("UserName already in use.");
+            }
+
+            user.setUserName(newUserName);
+
+            if (!firstName.isEmpty()) {
+                user.setFirstName(firstName);
+            }
+
+            if (!lastName.isEmpty()) {
+                user.setLastName(lastName);
+            }
+
+            if (!password.isEmpty()) {
+                user.setPassword(password);
+            }
+
+            em.merge(user);
+
+            em.getTransaction().commit();
+
+            return new UserDTO(user);
+        } finally {
+            em.close();
+        }
     }
 
     public boolean deleteUserAccount(String userName) {
@@ -224,16 +239,35 @@ public class UserFacade {
 
         try {
             em.getTransaction().begin();
-            User user = em.find(User.class, userName);
+            User user = getUserByUserName(userName);
             em.remove(user);
             em.getTransaction().commit();
 
             return true;
         } catch (Exception e) {
-            System.out.println(e);
             return false;
         } finally {
             em.close();
+        }
+    }
+
+    public boolean userNameIsUsed(String userName) {
+        User user = getUserByUserName(userName);
+        return user != null;
+    }
+
+    public User getUserByUserName(String userName) {
+        EntityManager em = getEntityManager();
+
+        try {
+            Query query = em.createNamedQuery("User.findUser");
+            query.setParameter("userName", userName);
+
+            User user = (User) query.getSingleResult();
+
+            return user;
+        } catch (NoResultException e) {
+            return null;
         }
     }
 

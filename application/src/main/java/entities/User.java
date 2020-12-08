@@ -9,6 +9,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -30,12 +32,17 @@ import org.mindrot.jbcrypt.BCrypt;
 @Table(name = "USERS")
 @NamedQueries({
     @NamedQuery(name = "User.getAll", query = "SELECT u FROM User u"),
+    @NamedQuery(name = "User.findUser", query = "SELECT u FROM User u WHERE u.userName = :userName"),
     @NamedQuery(name = "User.deleteAllRows", query = "DELETE FROM User"),
     @NamedQuery(name = "User.getAllShipments", query = "SELECT s FROM Shipment s JOIN FETCH s.users u WHERE u = :user")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "USERNAME", length = 25)
@@ -73,7 +80,7 @@ public class User implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "LK_USERS_SHIPMENTS", joinColumns = {
-        @JoinColumn(name = "USER", referencedColumnName = "USERNAME")}, inverseJoinColumns = {
+        @JoinColumn(name = "USER", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "SHIPMENT", referencedColumnName = "ID")
     })
     private List<Shipment> shipments;
@@ -95,6 +102,10 @@ public class User implements Serializable {
     public User() {
         this.roles = new ArrayList<>();
         shipments = new ArrayList();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getUserName() {
