@@ -210,4 +210,16 @@ public class UserFacade {
         }
     }
 
+    public UserDTO getUserAccount(String userName) {
+        return new UserDTO(getUserByUserName(userName));
+    }
+
+    public UserDTO editUserAccount(String oldUserName, String newUserName, String firstName, String lastName, String password) {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean deleteUserAccount(String userName) {
+        throw new UnsupportedOperationException();
+    }
+
 }

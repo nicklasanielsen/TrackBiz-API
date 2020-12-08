@@ -21,6 +21,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -113,6 +114,29 @@ public class UserResource {
         } catch (Exception e) {
             throw new API_Exception("Malformed JSON Suplied", 400, e);
         }
+    }
+
+    @GET
+    @RolesAllowed("User")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserAccount() {
+        String username = securityContext.getUserPrincipal().getName();
+        return Response.ok(FACADE.getUserAccount(username)).build();
+    }
+
+    @PUT
+    @RolesAllowed("User")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response editUserAccount() {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    }
+
+    @DELETE
+    @RolesAllowed("User")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteUserAccount() {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
 }

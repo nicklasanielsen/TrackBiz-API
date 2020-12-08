@@ -31,6 +31,7 @@ The token must be provided under header-key `x-access-token`.
 
 ### User related
 
+* [Get](user/getUser.md) : `GET /api/user/`
 * [Edit](user/EditUser.md) : `PUT /api/user/`
 * [Delete](user/DeleteUser.md) : `DELETE /api/user/`
 * [Get tracked shipments](user/GetTrackedShipments.md) : `GET /api/user/shipments/`
