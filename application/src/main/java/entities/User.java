@@ -74,7 +74,7 @@ public class User implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "LK_USERS_ROLES", joinColumns = {
-        @JoinColumn(name = "USER", referencedColumnName = "USERNAME")}, inverseJoinColumns = {
+        @JoinColumn(name = "USER", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "ROLE", referencedColumnName = "ROLE_NAME")})
     private List<Role> roles;
 
