@@ -17,7 +17,7 @@ Used by Admin users to get a list of requested Couriers.
 ```json
 [
     {
-        "id": "Integer",
+        "id": "String",
         "name": "String",
         "url": "String",
         "message": "String"

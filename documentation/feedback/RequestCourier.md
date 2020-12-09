@@ -26,7 +26,9 @@ Used by users to request additional couriers.
 
 ```json
 {
-    "code": 200,
+    "id": "String",
+    "name": "String",
+    "url": "String",
     "message": "String"
 }
 ```
