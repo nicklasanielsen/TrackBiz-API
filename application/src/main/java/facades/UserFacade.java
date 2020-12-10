@@ -155,15 +155,16 @@ public class UserFacade {
 
         Shipment shipment = getShipment(courier, trackingNumber);
 
-        if (!shipment.getUsers().contains(user)) {
+        boolean userNotLinkedToShipment = !shipment.getUsers().contains(user);
+        if (userNotLinkedToShipment) {
             throw new NoShipmentsFoundException(trackingNumber);
         }
 
-        shipment.removeUser(user);
+        user.removeShipment(shipment);
 
         try {
             em.getTransaction().begin();
-            em.merge(shipment);
+            em.merge(user);
             em.getTransaction().commit();
 
             if (shipment.getUsers().isEmpty()) {
