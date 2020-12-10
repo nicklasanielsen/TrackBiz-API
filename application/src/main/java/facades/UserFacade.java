@@ -238,14 +238,17 @@ public class UserFacade {
     public boolean deleteUserAccount(String userName) {
         EntityManager em = getEntityManager();
 
+        User user = getUserByUserName(userName);
+
         try {
             em.getTransaction().begin();
-            User user = getUserByUserName(userName);
+            user = em.find(User.class, user.getId());
             em.remove(user);
             em.getTransaction().commit();
 
             return true;
         } catch (Exception e) {
+            System.out.println(e);
             return false;
         } finally {
             em.close();
