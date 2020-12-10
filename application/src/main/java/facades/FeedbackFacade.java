@@ -75,7 +75,7 @@ public class FeedbackFacade {
 
         try {
             em.getTransaction().begin();
-            CourierRequest courierRequest = em.find(CourierRequest.class, id);
+            CourierRequest courierRequest = em.find(CourierRequest.class, Long.parseLong(id));
             em.remove(courierRequest);
             em.getTransaction().commit();
 
