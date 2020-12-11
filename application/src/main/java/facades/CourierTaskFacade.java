@@ -29,7 +29,6 @@ public class CourierTaskFacade {
         tasks.put("GLS", new GLSTask(trackingNumber));
         tasks.put("PostNord", new PostNordTask(trackingNumber));
         tasks.put("DHL", new DHLTask(trackingNumber));
-        tasks.put("FedEx", new FedExTask(trackingNumber));
         tasks.put("TNT Express", new TNT_ExpressTask(trackingNumber));
 
         return tasks;

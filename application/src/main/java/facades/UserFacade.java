@@ -248,7 +248,6 @@ public class UserFacade {
 
             return true;
         } catch (Exception e) {
-            System.out.println(e);
             return false;
         } finally {
             em.close();
