@@ -155,7 +155,8 @@ public class UserFacade {
 
         Shipment shipment = getShipment(courier, trackingNumber);
 
-        boolean userNotLinkedToShipment = !shipment.getUsers().contains(user);
+        List<User> users = shipment.getUsers();
+        boolean userNotLinkedToShipment = !users.contains(user);
         if (userNotLinkedToShipment) {
             throw new NoShipmentsFoundException(trackingNumber);
         }
@@ -173,6 +174,8 @@ public class UserFacade {
                 em.remove(shipment);
                 em.getTransaction().commit();
             }
+        } catch (Exception e) {
+            System.out.println(e);
         } finally {
             em.close();
         }
