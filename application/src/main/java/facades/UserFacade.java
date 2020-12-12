@@ -85,7 +85,7 @@ public class UserFacade {
                 em.getTransaction().rollback();
             }
 
-            throw new DatabaseException(e.getMessage());//"Something went wrong! Failed to create user, please try again later.");
+            throw new DatabaseException("Something went wrong! Failed to create user, please try again later.");
         } finally {
             em.close();
         }
@@ -155,18 +155,17 @@ public class UserFacade {
 
         Shipment shipment = getShipment(courier, trackingNumber);
 
-        List<User> users = shipment.getUsers();
-        boolean userNotLinkedToShipment = !users.contains(user);
-        if (userNotLinkedToShipment) {
-            throw new NoShipmentsFoundException(trackingNumber);
-        }
-
+        shipment.getUsers();
+        shipment.removeUser(user);
         user.removeShipment(shipment);
 
         try {
             em.getTransaction().begin();
             em.merge(user);
+            em.merge(shipment);
             em.getTransaction().commit();
+
+            System.out.println(shipment.getUsers());
 
             if (shipment.getUsers().isEmpty()) {
                 em.getTransaction().begin();
