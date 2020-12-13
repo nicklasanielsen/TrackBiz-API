@@ -145,7 +145,7 @@ public class UserResource {
         User user = getUser();
 
         Courier courier = getCourier(jsonString);
-        String trackingNumber = getStringFromJson("trackingNumber", jsonString);
+        String trackingNumber = getStringFromJson("shippingNumber", jsonString);
 
         FACADE.addTrackedShipment(user, courier, trackingNumber);
 
@@ -164,7 +164,7 @@ public class UserResource {
         User user = getUser();
 
         Courier courier = getCourier(jsonString);
-        String trackingNumber = getStringFromJson("trackingNumber", jsonString);
+        String trackingNumber = getStringFromJson("shippingNumber", jsonString);
 
         FACADE.removeTrackedShipment(user, courier, trackingNumber);
 
@@ -189,7 +189,6 @@ public class UserResource {
             JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
             return (json.get(keyword).getAsString());
         } catch (Exception e) {
-            Logger.getLogger("getStringFromJson").warning(keyword + " - " + jsonString);
             throw new API_Exception("Malformed JSON Suplied", 400, e);
         }
     }
