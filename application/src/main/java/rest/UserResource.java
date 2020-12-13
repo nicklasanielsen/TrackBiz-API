@@ -161,7 +161,6 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removeTrackedShipment(String jsonString) throws API_Exception, UnsupportedCourierException, NoShipmentsFoundException {
-        Logger.getLogger(UserResource.class.getName()).warning(jsonString);
         User user = getUser();
 
         Courier courier = getCourier(jsonString);
@@ -190,6 +189,7 @@ public class UserResource {
             JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
             return (json.get(keyword).getAsString());
         } catch (Exception e) {
+            Logger.getLogger("getStringFromJson").warning(keyword + " - " + jsonString);
             throw new API_Exception("Malformed JSON Suplied", 400, e);
         }
     }
