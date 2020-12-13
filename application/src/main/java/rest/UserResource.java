@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletContext;
@@ -160,6 +161,7 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removeTrackedShipment(String jsonString) throws API_Exception, UnsupportedCourierException, NoShipmentsFoundException {
+        Logger.getLogger(UserResource.class.getName()).warning(jsonString);
         User user = getUser();
 
         Courier courier = getCourier(jsonString);
