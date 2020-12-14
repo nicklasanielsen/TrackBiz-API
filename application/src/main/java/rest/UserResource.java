@@ -144,7 +144,7 @@ public class UserResource {
         User user = getUser();
 
         Courier courier = getCourier(jsonString);
-        String trackingNumber = getStringFromJson("shippingNumber", jsonString);
+        String trackingNumber = getStringFromJson("trackingNumber", jsonString);
 
         FACADE.addTrackedShipment(user, courier, trackingNumber);
 
