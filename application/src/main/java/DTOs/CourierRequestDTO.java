@@ -68,9 +68,6 @@ public class CourierRequestDTO {
         if (!Objects.equals(this.message, other.message)) {
             return false;
         }
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
         return true;
     }
 

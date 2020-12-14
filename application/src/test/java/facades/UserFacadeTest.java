@@ -1,9 +1,7 @@
 package facades;
 
 import DTOs.UserDTO;
-import entities.Courier;
 import entities.Role;
-import entities.Shipment;
 import entities.User;
 import errorhandling.exceptions.DatabaseException;
 import errorhandling.exceptions.UserCreationException;
@@ -58,7 +56,7 @@ public class UserFacadeTest {
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Role.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Courier.deleteAll").executeUpdate();
+            em.createNamedQuery("User.deleteAllRows").executeUpdate();
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -155,6 +153,68 @@ public class UserFacadeTest {
 
         // Act
         User actual = facade.getUserByUserName(expected.getUserName());
+
+        // Assert
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void deleteUserAccount_Success() {
+        // Act
+        boolean actual = facade.deleteUserAccount(user.getUserName());
+
+        // Assert
+        assertTrue(actual);
+    }
+
+    @Test
+    public void editUserAccount_Success_UserName_Updated() throws UserCreationException {
+        // Arrange
+        String oldValue = user.getUserName();
+        user.setUserName("newUserName");
+        UserDTO expected = new UserDTO(user);
+
+        // Act
+        UserDTO actual = facade.editUserAccount(oldValue, user.getUserName(), "", "", "");
+
+        // Assert
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void editUserAccount_Success_FirstName_Updated() throws UserCreationException {
+        // Arrange
+        user.setFirstName("CoolTestName");
+        UserDTO expected = new UserDTO(user);
+
+        // Act
+        UserDTO actual = facade.editUserAccount(user.getUserName(), user.getUserName(), user.getFirstName(), "", "");
+
+        // Assert
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void editUserAccount_Success_LastName_Updated() throws UserCreationException {
+        //
+        user.setLastName("CoolLastName");
+        UserDTO expected = new UserDTO(user);
+
+        // Act
+        UserDTO actual = facade.editUserAccount(user.getUserName(), user.getUserName(), "", user.getLastName(), "");
+
+        // Assert
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void editUserAccount_Success_Password_Updated() throws UserCreationException {
+        // Arrange
+        user.setPassword("NewPassword");
+        UserDTO expected = new UserDTO(user);
+
+        // Act
+        UserDTO actual = facade.editUserAccount(user.getUserName(), user.getUserName(), "", "", "NewPassword");
 
         // Assert
         assertEquals(expected, actual);

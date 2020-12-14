@@ -20,7 +20,8 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "FEEDBACK")
 @NamedQueries({
-    @NamedQuery(name = "CourierRequest.getAll", query = "SELECT c FROM CourierRequest c")})
+    @NamedQuery(name = "CourierRequest.getAll", query = "SELECT c FROM CourierRequest c"),
+    @NamedQuery(name = "CourierRequest.deleteAll", query = "DELETE FROM CourierRequest")})
 public class CourierRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;

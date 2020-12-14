@@ -4,7 +4,7 @@
 
     <groupId>dk.newbiz</groupId>
     <artifactId>TrackBiz</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
     <packaging>war</packaging>
 
     <name>TrackBiz - REST API</name>
